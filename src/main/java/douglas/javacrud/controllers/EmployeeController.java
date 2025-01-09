@@ -58,7 +58,10 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete employee by id")
     public ResponseEntity<String> deleteEmployeeById(@PathVariable String id) {
-        employeeUserCase.delete(Long.parseLong(id));
+        var deleteUser = employeeUserCase.delete(Long.parseLong(id));
+        if (!deleteUser.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().body("Functionary deletable success!");
     }
 }

@@ -11,7 +11,9 @@ import douglas.javacrud.type.EmployeePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -73,7 +75,11 @@ public class EmployeeUserCase {
     }
 
     public Optional<RespEmployeeDTO> getEmployee(Long id) {
-        var employee = employeeRepository.findById(id);
+        Employee employee = employeeRepository.findById(id);
+
+        if(employee == null) {
+            return Optional.empty();
+        }
 
         return Optional.of(new RespEmployeeDTO(
                 Long.parseLong(String.valueOf(employee.getId())),
@@ -98,7 +104,15 @@ public class EmployeeUserCase {
         employeeRepository.save(existEmployee);
     }
 
-    public void delete(Long id) {
+    public Map<Boolean,String> delete(Long id) {
+        Employee employee = employeeRepository.findById(id);
+
+        Map<Boolean, String> map = new HashMap<>();
+
+        if(employee == null) {
+            map.put(false, "Employee not found");
+        }
         employeeRepository.delete(id);
+        return map;
     }
 }
